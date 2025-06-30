@@ -18,16 +18,7 @@ jobs:
             const baseBranch = context.payload.pull_request.base.ref;
 
             if (baseBranch === 'trunk') {
-              const body = `⚠️ **Reminder:** Please ensure this code was tested on the \`uat\` branch before merging to \`trunk\`.
-
-🔁 The expected flow is:
-1. Merge to \`develop\`
-2. Internal testing and approval
-3. Merge to \`uat\`
-4. Final testing on the UAT site
-5. Merge to \`trunk\`
-
-If you haven't tested on \`uat\` yet, please do so before proceeding!`;
+              const body = "⚠️ **Reminder:** Please ensure this code was tested on the `uat` branch before merging to `trunk`.\n\n🔁 The expected flow is:\n1. Merge to `develop`\n2. Internal testing and approval\n3. Merge to `uat`\n4. Final testing on the UAT site\n5. Merge to `trunk`\n\nIf you haven't tested on `uat` yet, please do so before proceeding.";
 
               await github.rest.issues.createComment({
                 ...context.repo,
