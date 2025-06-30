@@ -2,12 +2,9 @@ name: PR Reminder for `trunk`
 
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize]
+    types: [opened]
     branches:
       - trunk
-
-permissions:
-  statuses: write
 
 jobs:
   remind-on-trunk-pr:
