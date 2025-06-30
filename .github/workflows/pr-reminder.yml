@@ -1,28 +1,28 @@
-name: Reminder for `trunk` PRs
+name: PR Reminder for `trunk`
 
 on:
   pull_request:
+    types: [opened, edited, reopened, synchronize]
     branches:
       - trunk
+
+permissions:
+  statuses: write
 
 jobs:
   remind-on-trunk-pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Check if PR is targeting `trunk` and add reminder
+      - name: Post failing check if targeting `trunk`
         uses: actions/github-script@v7
         with:
           script: |
-            const prTitle = context.payload.pull_request.title;
-            const prNumber = context.payload.pull_request.number;
-            const baseBranch = context.payload.pull_request.base.ref;
+            const pr = context.payload.pull_request;
+            const headSha = pr.head.sha;
 
-            if (baseBranch === 'trunk') {
-              const body = "⚠️ **Reminder:** Please ensure this code was tested on the `uat` branch before merging to `trunk`.\n\n🔁 The expected flow is:\n1. Merge to `develop`\n2. Internal testing and approval\n3. Merge to `uat`\n4. Final testing on the UAT site\n5. Merge to `trunk`\n\nIf you haven't tested on `uat` yet, please do so before proceeding.";
-
-              await github.rest.issues.createComment({
-                ...context.repo,
-                issue_number: prNumber,
-                body: body
-              });
-            }
+          await github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '> [!CAUTION]\n> Reminder: Please make sure this code was tested on the `uat` branch before merging to `trunk`.\n\nDeployment Flow Checklist:\n1. Merge to `develop`\n2. Internal testing and approval\n3. Merge to `uat`\n4. Final testing on the UAT site\n5. Merge to `trunk`\n\nIf you haven’t tested on `uat`, please do so before merging.'
+          })
