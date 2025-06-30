@@ -6,9 +6,6 @@ on:
     branches:
       - trunk
 
-permissions:
-  statuses: write
-
 jobs:
   remind-on-trunk-pr:
     runs-on: ubuntu-latest
